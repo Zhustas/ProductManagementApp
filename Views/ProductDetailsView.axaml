@@ -1,0 +1,101 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+	xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+	xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+	xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+	xmlns:viewModels="clr-namespace:ProductManagementApp.ViewModels"
+	mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
+	x:DataType="viewModels:ProductDetailsViewModel"
+	x:Class="ProductManagementApp.ProductDetailsView">
+	<Grid>
+		<Grid.RowDefinitions>
+			<RowDefinition Height="Auto" />
+			<RowDefinition Height="Auto" />
+			<RowDefinition Height="Auto" />
+			<RowDefinition Height="Auto" />
+			<RowDefinition Height="Auto" />
+			<RowDefinition Height="Auto" />
+			<RowDefinition Height="Auto" />
+			<RowDefinition Height="Auto" />
+		</Grid.RowDefinitions>
+
+		<StackPanel Grid.Row="0">
+			<TextBlock>Name</TextBlock>
+			<TextBox Text="{Binding Name}" />
+		</StackPanel>
+
+		<StackPanel Grid.Row="1">
+			<TextBlock>Price</TextBlock>
+			<TextBox Text="{Binding Price}" />
+		</StackPanel>
+
+		<StackPanel Grid.Row="2">
+			<TextBlock>Description</TextBlock>
+			<TextBox Text="{Binding Description}" />
+		</StackPanel>
+
+		<StackPanel Grid.Row="3">
+			<TextBlock>Rating</TextBlock>
+			<TextBox Text="{Binding Rating}" />
+		</StackPanel>
+
+		<!-- Magic -->
+		<ListBox Grid.Row="4" ItemsSource="{Binding Variants}">
+			<ListBox.ItemTemplate>
+				<DataTemplate>
+					<Grid>
+						<Grid.ColumnDefinitions>
+							<ColumnDefinition Width="Auto" />
+							<ColumnDefinition Width="Auto" />
+							<ColumnDefinition Width="Auto" />
+							<ColumnDefinition Width="Auto" />
+						</Grid.ColumnDefinitions>
+						
+						<CheckBox Click="OnVariantSelect" IsChecked="{Binding Selected}" />
+						<TextBox Grid.Column="1" Text="{Binding Name}" />
+						<Expander Grid.Column="2">
+							<Expander.Header>Options</Expander.Header>
+							<StackPanel>
+								<ListBox ItemsSource="{Binding Options}">
+									<ListBox.ItemTemplate>
+										<DataTemplate>
+											<Grid>
+												<Grid.RowDefinitions>
+													<RowDefinition Height="Auto" />
+													<RowDefinition Height="Auto" />
+												</Grid.RowDefinitions>
+												<Grid.ColumnDefinitions>
+													<ColumnDefinition Width="Auto" />
+													<ColumnDefinition Width="Auto" />
+													<ColumnDefinition Width="Auto" />
+												</Grid.ColumnDefinitions>
+
+												<CheckBox Click="OnVariantOptionSelect" IsChecked="{Binding Selected}" />
+												<TextBox Grid.Column="1" Text="{Binding Name}" />
+												<Button Grid.Column="2" Click="OnDeleteVariantOptionClick">
+													<Image Source="/Assets/delete.png" Height="10" />
+												</Button>
+											</Grid>
+										</DataTemplate>
+									</ListBox.ItemTemplate>
+								</ListBox>
+								<Button Click="OnAddNewVariantOptionClick">
+									<Image Source="/Assets/add.png" Height="10" />
+								</Button>
+							</StackPanel>
+						</Expander>
+						<Button Grid.Column="3" Click="OnDeleteVariantClick">
+							<Image Source="/Assets/delete.png" Height="10" />
+						</Button>
+					</Grid>
+				</DataTemplate>
+			</ListBox.ItemTemplate>
+		</ListBox>
+		
+		<Button Grid.Row="5" Click="OnAddNewVariantClick">Add new variant</Button>
+
+		<DockPanel Grid.Row="6">
+			<Button Click="OnCancelClick">Cancel</Button>
+			<Button Click="OnCreateSaveClick" IsEnabled="{Binding ValidationPassed}" x:Name="CreateSaveButton">Save</Button>
+		</DockPanel>
+	</Grid>
+</UserControl>

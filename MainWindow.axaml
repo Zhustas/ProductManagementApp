@@ -1,0 +1,32 @@
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+		xmlns:views="clr-namespace:ProductManagementApp"
+        mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
+        x:Class="ProductManagementApp.MainWindow"
+        Title="ProductManagementApp"
+		WindowStartupLocation="CenterScreen">
+	<Window.Styles>
+		<Style Selector="Button.nav">
+			<Setter Property="FontSize" Value="12" />
+			<Setter Property="FontWeight" Value="Medium" />
+		</Style>
+	</Window.Styles>
+
+	<!--<Grid>
+		<Grid.ColumnDefinitions>
+			<ColumnDefinition Width="Auto"></ColumnDefinition>
+			<ColumnDefinition Width="*"></ColumnDefinition>
+		</Grid.ColumnDefinitions>
+
+		<Border Grid.Column="0" Padding="10" Background="AliceBlue">
+			<StackPanel>
+				<Button Classes="nav">PRODUCTS</Button>
+				<Separator Opacity="0" Height="4" />
+				<Button Classes="nav">DETAILS</Button>
+			</StackPanel>
+		</Border>
+		<views:ProductListView Grid.Column="1" Padding="20"/>
+	</Grid>-->
+</Window>
