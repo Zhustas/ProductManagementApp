@@ -1,5 +1,4 @@
 using Avalonia.Controls;
-using Avalonia.Interactivity;
 using CommunityToolkit.Mvvm.Messaging;
 using ProductManagementApp.Messages;
 using ProductManagementApp.ViewModels;
@@ -23,15 +22,5 @@ public partial class MainWindow : Window
 		});
 
 		Content = ProductListView;
-	}
-
-	public void OnProductListViewClick(object sender, RoutedEventArgs args)
-	{
-
-	}
-
-	public void OnClick(object sender, RoutedEventArgs args)
-	{
-		Close();
 	}
 }

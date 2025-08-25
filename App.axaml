@@ -7,5 +7,113 @@
     <Application.Styles>
         <FluentTheme />
 		<StyleInclude Source="avares://Avalonia.Controls.DataGrid/Themes/Fluent.xaml"/>
+
+		<Style Selector="Window">
+			<Setter Property="Background" Value="#eff6ff" />
+		</Style>
+
+		<Style Selector="TextBlock.heading">
+			<Setter Property="FontSize" Value="32" />
+			<Setter Property="FontWeight" Value="Medium" />
+			<Setter Property="Margin" Value="0,0,0,12" />
+		</Style>
+
+		<Style Selector="DataGrid">
+			<Setter Property="GridLinesVisibility" Value="All" />
+			<Setter Property="CanUserResizeColumns" Value="True" />
+			<Setter Property="CanUserReorderColumns" Value="True" />
+			<Setter Property="BorderThickness" Value="2" />
+			<Setter Property="BorderBrush" Value="#155dfc" />
+		</Style>
+
+		<Style Selector="DataGridColumnHeader">
+			<Setter Property="Background" Value="#155dfc" />
+			<Setter Property="Foreground" Value="White" />
+			<Setter Property="HorizontalContentAlignment" Value="Center" />
+		</Style>
+		<Style Selector="DataGridRow">
+			<Style Selector="^:pointerover /template/ Rectangle">
+				<Setter Property="Fill" Value="#8ec5ff" />
+			</Style>
+			<Style Selector="^:selected /template/ Rectangle">
+				<Setter Property="Fill" Value="#2b7fff" />
+			</Style>
+			<Style Selector="^:nth-child(n)">
+				<Setter Property="Background" Value="White" />
+			</Style>
+			<Style Selector="^:nth-child(2n)">
+				<Setter Property="Background" Value="#f9fafb" />
+			</Style>
+		</Style>
+		
+		<Style Selector="Button">
+			<Setter Property="FontSize" Value="14" />
+			<Setter Property="FontWeight" Value="Medium" />
+			<Setter Property="Padding" Value="10,6" />
+		</Style>
+		<Style Selector="Button.positive">
+			<!-- 600 -->
+			<Setter Property="Background" Value="#155dfc" />
+			<Setter Property="Foreground" Value="White" />
+
+			<Style Selector="^:pointerover /template/ ContentPresenter">
+				<!-- 500 -->
+				<Setter Property="Background" Value="#2b7fff" />
+				<Setter Property="Foreground" Value="White" />
+			</Style>
+			<Style Selector="^:pressed /template/ ContentPresenter">
+				<!-- 400 -->
+				<Setter Property="Background" Value="#51a2ff" />
+				<Setter Property="Foreground" Value="White" />
+			</Style>
+		</Style>
+		<Style Selector="Button.neutral">
+			<!-- 600 -->
+			<Setter Property="Background" Value="#4a5565" />
+			<Setter Property="Foreground" Value="White" />
+			
+			<Style Selector="^:pointerover /template/ ContentPresenter">
+				<!-- 500 -->
+				<Setter Property="Background" Value="#6a7282" />
+				<Setter Property="Foreground" Value="White" />
+			</Style>
+			<Style Selector="^:pressed /template/ ContentPresenter">
+				<!-- 400 -->
+				<Setter Property="Background" Value="#99a1af" />
+				<Setter Property="Foreground" Value="White" />
+			</Style>
+		</Style>
+		<Style Selector="Button.negative">
+			<!-- 600 -->
+			<Setter Property="Background" Value="#e7000b" />
+			<Setter Property="Foreground" Value="White" />
+
+			<Style Selector="^:pointerover /template/ ContentPresenter">
+				<!-- 500 -->
+				<Setter Property="Background" Value="#fb2c36" />
+				<Setter Property="Foreground" Value="White" />
+			</Style>
+			<Style Selector="^:pressed /template/ ContentPresenter">
+				<!-- 400 -->
+				<Setter Property="Background" Value="#ff6467" />
+				<Setter Property="Foreground" Value="White" />
+			</Style>
+		</Style>
+		<Style Selector="Button.edit">
+			<!-- 500 -->
+			<Setter Property="Background" Value="#efb100" />
+			<Setter Property="Foreground" Value="White" />
+
+			<Style Selector="^:pointerover /template/ ContentPresenter">
+				<!-- 400 -->
+				<Setter Property="Background" Value="#fcc800" />
+				<Setter Property="Foreground" Value="White" />
+			</Style>
+			<Style Selector="^:pressed /template/ ContentPresenter">
+				<!-- 300 -->
+				<Setter Property="Background" Value="#ffdf20" />
+				<Setter Property="Foreground" Value="White" />
+			</Style>
+		</Style>
 	</Application.Styles>
 </Application>

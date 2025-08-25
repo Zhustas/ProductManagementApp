@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Collections.ObjectModel;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Collections.ObjectModel;
 
 namespace ProductManagementApp.Models;
 
@@ -13,13 +8,12 @@ public class Variant
 
 	public int ID { get; }
 	public bool Selected { get; set; }
-	public string Name { get; set; }
+	public string Name { get; set; } = "";
 	public ObservableCollection<VariantOption> Options { get; set; } = [];
-	public int OptionID { get; set; } = 0;
+	private int OptionID { get; set; } = 0;
 
 	public Variant()
 	{
-		Name = "";
 		ID = ++StaticID;
 	}
 
@@ -31,7 +25,7 @@ public class Variant
 
 	public void AddOption(VariantOption variantOption)
 	{
-		Options.Add(variantOption);
 		variantOption.ID = ++OptionID;
+		Options.Add(variantOption);
 	}
 }
