@@ -1,1 +1,2 @@
 # ProductManagementApp
+Product management app.
