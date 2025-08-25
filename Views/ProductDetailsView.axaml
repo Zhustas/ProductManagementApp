@@ -1,101 +1,220 @@
 <UserControl xmlns="https://github.com/avaloniaui"
-	xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-	xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-	xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-	xmlns:viewModels="clr-namespace:ProductManagementApp.ViewModels"
-	mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
-	x:DataType="viewModels:ProductDetailsViewModel"
-	x:Class="ProductManagementApp.ProductDetailsView">
-	<Grid>
-		<Grid.RowDefinitions>
-			<RowDefinition Height="Auto" />
-			<RowDefinition Height="Auto" />
-			<RowDefinition Height="Auto" />
-			<RowDefinition Height="Auto" />
-			<RowDefinition Height="Auto" />
-			<RowDefinition Height="Auto" />
-			<RowDefinition Height="Auto" />
-			<RowDefinition Height="Auto" />
-		</Grid.RowDefinitions>
+			 xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+			 xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+			 xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+			 xmlns:viewModels="clr-namespace:ProductManagementApp.ViewModels" 
+			 d:DesignWidth="1000" d:DesignHeight="800"
+			 x:DataType="viewModels:ProductDetailsViewModel"
+			 x:Class="ProductManagementApp.ProductDetailsView">
+	<UserControl.Styles>
+		<Style Selector="TextBlock.formtext">
+			<Setter Property="FontSize" Value="16" />
+			<Setter Property="Margin" Value="0,0,0,4" />
+			<Setter Property="FontWeight" Value="Medium" />
+		</Style>
 
-		<StackPanel Grid.Row="0">
-			<TextBlock>Name</TextBlock>
-			<TextBox Text="{Binding Name}" />
-		</StackPanel>
+		<Style Selector="TextBlock.error">
+			<Setter Property="Foreground" Value="#e7000b" />
+			<Setter Property="FontSize" Value="14" />
+			<Setter Property="FontWeight" Value="Medium" />
+		</Style>
 
-		<StackPanel Grid.Row="1">
-			<TextBlock>Price</TextBlock>
-			<TextBox Text="{Binding Price}" />
-		</StackPanel>
-
-		<StackPanel Grid.Row="2">
-			<TextBlock>Description</TextBlock>
-			<TextBox Text="{Binding Description}" />
-		</StackPanel>
-
-		<StackPanel Grid.Row="3">
-			<TextBlock>Rating</TextBlock>
-			<TextBox Text="{Binding Rating}" />
-		</StackPanel>
-
-		<!-- Magic -->
-		<ListBox Grid.Row="4" ItemsSource="{Binding Variants}">
-			<ListBox.ItemTemplate>
+		<Style Selector="DataValidationErrors">
+			<Setter Property="ErrorTemplate">
 				<DataTemplate>
-					<Grid>
-						<Grid.ColumnDefinitions>
-							<ColumnDefinition Width="Auto" />
-							<ColumnDefinition Width="Auto" />
-							<ColumnDefinition Width="Auto" />
-							<ColumnDefinition Width="Auto" />
-						</Grid.ColumnDefinitions>
-						
-						<CheckBox Click="OnVariantSelect" IsChecked="{Binding Selected}" />
-						<TextBox Grid.Column="1" Text="{Binding Name}" />
-						<Expander Grid.Column="2">
-							<Expander.Header>Options</Expander.Header>
-							<StackPanel>
-								<ListBox ItemsSource="{Binding Options}">
-									<ListBox.ItemTemplate>
-										<DataTemplate>
-											<Grid>
-												<Grid.RowDefinitions>
-													<RowDefinition Height="Auto" />
-													<RowDefinition Height="Auto" />
-												</Grid.RowDefinitions>
-												<Grid.ColumnDefinitions>
-													<ColumnDefinition Width="Auto" />
-													<ColumnDefinition Width="Auto" />
-													<ColumnDefinition Width="Auto" />
-												</Grid.ColumnDefinitions>
-
-												<CheckBox Click="OnVariantOptionSelect" IsChecked="{Binding Selected}" />
-												<TextBox Grid.Column="1" Text="{Binding Name}" />
-												<Button Grid.Column="2" Click="OnDeleteVariantOptionClick">
-													<Image Source="/Assets/delete.png" Height="10" />
-												</Button>
-											</Grid>
-										</DataTemplate>
-									</ListBox.ItemTemplate>
-								</ListBox>
-								<Button Click="OnAddNewVariantOptionClick">
-									<Image Source="/Assets/add.png" Height="10" />
-								</Button>
-							</StackPanel>
-						</Expander>
-						<Button Grid.Column="3" Click="OnDeleteVariantClick">
-							<Image Source="/Assets/delete.png" Height="10" />
-						</Button>
-					</Grid>
+					<ItemsControl ItemsSource="{Binding}">
+						<ItemsControl.ItemTemplate>
+							<DataTemplate>
+								<TextBlock Text="{Binding}" Classes="error" />
+							</DataTemplate>
+						</ItemsControl.ItemTemplate>
+					</ItemsControl>
 				</DataTemplate>
-			</ListBox.ItemTemplate>
-		</ListBox>
+			</Setter>
+		</Style>
 		
-		<Button Grid.Row="5" Click="OnAddNewVariantClick">Add new variant</Button>
+		<Style Selector="TextBox">
+			<Style Selector="^:focus /template/ Border">
+				<Setter Property="BorderBrush" Value="#155dfc" />
+			</Style>
+			<Style Selector="^.forminput">
+				<Setter Property="Background" Value="White" />
+			</Style>
+			<Style Selector="^.multiline">
+				<Setter Property="Height" Value="80" />
+				<Setter Property="TextWrapping" Value="Wrap" />
+				<Setter Property="AcceptsReturn" Value="True" />
+			</Style>
+			<Style Selector="^.variant">
+				<Setter Property="Background" Value="White" />
+				<Setter Property="VerticalAlignment" Value="Center" />
+				<Setter Property="Margin" Value="0,0,8,0" />
+			</Style>
+			<Style Selector="^.variantoption">
+				<Setter Property="Background" Value="White" />
+				<Setter Property="Margin" Value="0,0,8,0" />
+			</Style>
+		</Style>
 
-		<DockPanel Grid.Row="6">
-			<Button Click="OnCancelClick">Cancel</Button>
-			<Button Click="OnCreateSaveClick" IsEnabled="{Binding ValidationPassed}" x:Name="CreateSaveButton">Save</Button>
-		</DockPanel>
-	</Grid>
+		<Style Selector="CheckBox">
+			<Style Selector="^:checked /template/ Border#NormalRectangle">
+				<Setter Property="BorderBrush" Value="#155dfc" />
+				<Setter Property="Background" Value="#155dfc" />
+			</Style>
+			<Style Selector="^:checked:pointerover /template/ Border#NormalRectangle">
+				<Setter Property="BorderBrush" Value="#2b7fff" />
+				<Setter Property="Background" Value="#2b7fff" />
+			</Style>
+			<Style Selector="^:checked:pressed /template/ Border#NormalRectangle">
+				<Setter Property="Background" Value="#51a2ff" />
+				<Setter Property="BorderBrush" Value="#51a2ff" />
+			</Style>
+			<Style Selector="^:unchecked:pressed /template/ Border#NormalRectangle">
+				<Setter Property="Background" Value="#51a2ff" />
+				<Setter Property="BorderBrush" Value="#51a2ff" />
+			</Style>
+		</Style>
+
+		<Style Selector="Expander.variant">
+			<Setter Property="Background" Value="White" />
+		</Style>
+
+		<Style Selector="Button.variant">
+			<Setter Property="Padding" Value="0" />
+			<Setter Property="Width" Value="20" />
+			<Setter Property="Height" Value="20" />
+		</Style>
+		
+		<Style Selector="Image.variant">
+			<Setter Property="Width" Value="10" />
+		</Style>
+
+		<Style Selector="StackPanel">
+			<Style Selector="^.entry">
+				<Setter Property="Margin" Value="0,0,0,12" />
+			</Style>
+			<Style Selector="^.last">
+				<Setter Property="Margin" Value="0,0,0,12" />
+			</Style>
+		</Style>
+
+		<Style Selector="DataGridRow">
+			<Style Selector="^:pointerover /template/ Rectangle">
+				<Setter Property="Fill" Value="Transparent" />
+			</Style>
+			<Style Selector="^:selected /template/ Rectangle">
+				<Setter Property="Fill" Value="Transparent" />
+			</Style>
+			<Style Selector="^:nth-child(n)">
+				<Setter Property="Background" Value="White" />
+			</Style>
+			<Style Selector="^:nth-child(2n)">
+				<Setter Property="Background" Value="#f9fafb" />
+			</Style>
+		</Style>
+	</UserControl.Styles>
+
+	<ScrollViewer>
+		<Grid Margin="30">
+			<Grid.RowDefinitions>
+				<RowDefinition Height="Auto" />
+				<RowDefinition Height="Auto" />
+				<RowDefinition Height="Auto" />
+				<RowDefinition Height="Auto" />
+				<RowDefinition Height="Auto" />
+				<RowDefinition Height="*" />
+				<RowDefinition Height="Auto" />
+			</Grid.RowDefinitions>
+
+			<TextBlock Grid.Row="0" x:Name="PageHeading" Classes="heading">Create product</TextBlock>
+
+			<StackPanel Grid.Row="1" Classes="entry">
+				<TextBlock Classes="formtext">Name</TextBlock>
+				<TextBox Classes="forminput" Text="{Binding Name}" />
+			</StackPanel>
+
+			<StackPanel Grid.Row="2" Classes="entry">
+				<TextBlock Classes="formtext">Price</TextBlock>
+				<TextBox Classes="forminput" Text="{Binding Price}" />
+			</StackPanel>
+
+			<StackPanel Grid.Row="3" Classes="entry">
+				<TextBlock Classes="formtext">Description</TextBlock>
+				<TextBox Classes="forminput multiline" Text="{Binding Description}" />
+			</StackPanel>
+
+			<StackPanel Grid.Row="4" Classes="entry">
+				<TextBlock Classes="formtext">Rating</TextBlock>
+				<TextBox Classes="forminput" Text="{Binding Rating}" />
+			</StackPanel>
+
+			<Grid Grid.Row="5" Classes="entry last">
+				<Grid.RowDefinitions>
+					<RowDefinition Height="Auto" />	
+					<RowDefinition Height="*" />	
+					<RowDefinition Height="Auto" />	
+				</Grid.RowDefinitions>
+				
+				<TextBlock Grid.Row="0" Classes="formtext">Variants</TextBlock>
+				<DataGrid Grid.Row="1" ItemsSource="{Binding Variants}">
+					<DataGrid.Columns>
+						<DataGridTemplateColumn Header="Selected">
+							<DataTemplate>
+								<CheckBox Click="OnVariantSelect" IsChecked="{Binding Selected}"
+										  HorizontalAlignment="Center"/>
+							</DataTemplate>
+						</DataGridTemplateColumn>
+						<DataGridTextColumn Header="Name" Binding="{Binding Name}" Width="*" />
+						<DataGridTemplateColumn Header="Options" Width="3*">
+							<DataTemplate>
+								<Expander HorizontalAlignment="Stretch" Header="Select" Classes="variant">
+									<Grid>
+										<Grid.RowDefinitions>
+											<RowDefinition Height="Auto" />
+											<RowDefinition Height="Auto" />
+										</Grid.RowDefinitions>
+
+										<DataGrid Grid.Row="0" ItemsSource="{Binding Options}">
+											<DataGrid.Columns>
+												<DataGridTemplateColumn Header="Selected">
+													<DataTemplate>
+														<CheckBox Click="OnVariantOptionSelect" IsChecked="{Binding Selected}" HorizontalAlignment="Center" />
+													</DataTemplate>
+												</DataGridTemplateColumn>
+												<DataGridTextColumn Header="Name" Binding="{Binding Name}" Width="*" />
+												<DataGridTemplateColumn Header="Action">
+													<DataTemplate>
+														<Button Click="OnDeleteVariantOptionClick" Classes="negative variant" HorizontalAlignment="Center">
+															<Image Source="/Assets/delete.png" Classes="variant" />
+														</Button>
+													</DataTemplate>
+												</DataGridTemplateColumn>
+											</DataGrid.Columns>
+										</DataGrid>
+										<Button Grid.Row="1" Click="OnAddNewVariantOptionClick" Classes="positive" Margin="0,12,0,0">
+											Add new variant option
+										</Button>
+									</Grid>
+								</Expander>
+							</DataTemplate>
+						</DataGridTemplateColumn>
+						<DataGridTemplateColumn Header="Action">
+							<DataTemplate>
+								<Button Click="OnDeleteVariantClick" Classes="negative variant" HorizontalAlignment="Center">
+									<Image Source="/Assets/delete.png" Classes="variant" />
+								</Button>
+							</DataTemplate>
+						</DataGridTemplateColumn>
+					</DataGrid.Columns>
+				</DataGrid>
+				<Button Grid.Row="2" Click="OnAddNewVariantClick" Classes="positive" Margin="0,12,0,0">Add new variant</Button>
+			</Grid>
+
+			<DockPanel Grid.Row="6" HorizontalAlignment="Right">
+				<Button Click="OnCancelClick" Classes="neutral" Margin="0,0,6,0">Cancel</Button>
+				<Button Click="OnCreateSaveClick" IsEnabled="{Binding ValidationPassed}" 
+						x:Name="CreateSaveButton" Classes="positive">Create</Button>
+			</DockPanel>
+		</Grid>
+	</ScrollViewer>
 </UserControl>

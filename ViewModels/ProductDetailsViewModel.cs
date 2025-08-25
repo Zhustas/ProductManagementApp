@@ -1,6 +1,4 @@
-﻿using Avalonia.Data;
-using Avalonia.Styling;
-using ProductManagementApp.Attributes;
+﻿using ProductManagementApp.Attributes;
 using ProductManagementApp.Models;
 using System;
 using System.Collections.Generic;
@@ -27,55 +25,50 @@ public class ProductDetailsViewModel : INotifyPropertyChanged
         set => variants = value;
     }
 
-    private Product product;
-    public Product Product
-    {
-        get => product;
-        set => product = value;
-    }
+    private readonly Product product;
 
-    public string _name;
+    public string name;
     [Required(ErrorMessage = "Product name is required.")]
     public string Name
     {
-        get => _name;
+        get => name;
         set
         {
-            _name = value;
+            name = value;
             OnPropertyChanged(nameof(ValidationPassed));
         }
     }
 
-    public string _price;
+    public string price;
     [Numeric(ErrorMessage = "Price should be a numeric value.")]
     [Range(MinPrice, MaxPrice, ErrorMessage = "Price should be between 0 and 10 000.")]
     public string Price
     { 
-        get => _price;
+        get => price;
         set
         {
-            _price = value;
+            price = value;
             OnPropertyChanged(nameof(ValidationPassed));
         }
     }
 
-    public string _description;
-    public string Description { get => _description; set => _description = value; }
+    public string description;
+    public string Description { get => description; set => description = value; }
 
-    public string _rating;
+    public string rating;
 	[Numeric(ErrorMessage = "Rating should be a numeric value.")]
     [Range(MinRating, MaxRating, ErrorMessage = "Rating should be between 0 and 5.")]
     public string Rating
     {
-        get => _rating;
+        get => rating;
         set
         {
-            _rating = value;
+            rating = value;
 			OnPropertyChanged(nameof(ValidationPassed));
 		}
     }
 
-    private List<KeyValuePair<int, List<int>>> ids = [];
+    private readonly List<KeyValuePair<int, List<int>>> variantIDs = [];
 
     public bool ValidationPassed => TryValidationToPass();
 
@@ -86,61 +79,59 @@ public class ProductDetailsViewModel : INotifyPropertyChanged
     public ProductDetailsViewModel()
     {
         product = new Product();
-
-		_name = product.Name;
-		_price = product.Price.ToString();
-		_description = product.Description;
-		_rating = product.Rating.ToString();
+        SetProductData(product);
 	}
 
     public ProductDetailsViewModel(Product product)
     {
         this.product = product;
 
-		_name = product.Name;
-		_price = product.Price.ToString();
-		_description = product.Description;
-		_rating = product.Rating.ToString();
-
-        CopyVariants(product.Variants, ids);
-
-        Debug.WriteLine(product);
+        SetProductData(product);
+		CopyVariantsIDs(product.VariantsIDs, variantIDs);
 	}
 
-    private void CopyVariants(List<KeyValuePair<int, List<int>>> from, List<KeyValuePair<int, List<int>>> to)
+    private void SetProductData(Product product)
+    {
+		name = product.Name;
+		price = product.Price.ToString();
+		description = product.Description;
+		rating = product.Rating.ToString();
+	}
+
+    private static void CopyVariantsIDs(List<KeyValuePair<int, List<int>>> from, List<KeyValuePair<int, List<int>>> to)
     {
         to.Clear();
         foreach (var pair in from)
         {
-            to.Add(new KeyValuePair<int, List<int>>(pair.Key, new List<int>(pair.Value)));
+            to.Add(new KeyValuePair<int, List<int>>(pair.Key, [..pair.Value]));
         }
     }
     
-    private bool IsNumeric(string value, out double retVal)
+    private static bool IsNumeric(string value, out double retVal)
     {
         return double.TryParse(value, out retVal);
     }
 
-    private bool IsInRange(double min, double max, double value)
+    private static bool IsInRange(double min, double max, double value)
     {
         return min <= value && value <= max;
     }
 
 	private bool TryValidationToPass()
     {
-        return _name.Length != 0 && 
-            IsNumeric(_price, out double price) && IsInRange(MinPrice, MaxPrice, price) && 
-            IsNumeric(_rating, out double rating) && IsInRange(MinRating, MaxRating, rating);
+        return name.Length != 0 && 
+            IsNumeric(price, out double outPrice) && IsInRange(MinPrice, MaxPrice, outPrice) && 
+            IsNumeric(rating, out double outRating) && IsInRange(MinRating, MaxRating, outRating);
     }
 
     public void SetProductVariants()
     {
         foreach (Variant variant in variants)
         {
-            if (product.Variants.Any(v => v.Key == variant.ID))
+            if (product.VariantsIDs.Any(v => v.Key == variant.ID))
             {
 				variant.Selected = true;
-				var v = product.Variants.Find(v => v.Key == variant.ID);
+				var v = product.VariantsIDs.Find(v => v.Key == variant.ID);
 				foreach (VariantOption variantOption in variant.Options)
 				{
 					if (v.Value.Contains(variantOption.ID))
@@ -162,7 +153,7 @@ public class ProductDetailsViewModel : INotifyPropertyChanged
         }
     }
 
-    public void AddNewVariant()
+    public static void AddNewVariant()
     {
         variants.Add(new Variant());
     }
@@ -170,10 +161,10 @@ public class ProductDetailsViewModel : INotifyPropertyChanged
     public void DeleteVariant(Variant variant)
     {
         variants.Remove(variant);
-        ids.RemoveAll(v => v.Key == variant.ID);
+        variantIDs.RemoveAll(v => v.Key == variant.ID);
     }
 
-    public void AddNewVariantOption(Variant variant)
+    public static void AddNewVariantOption(Variant variant)
     {
         variant.AddOption(new VariantOption(variant));
     }
@@ -181,9 +172,9 @@ public class ProductDetailsViewModel : INotifyPropertyChanged
     public void DeleteVariantOption(VariantOption variantOption)
     {
         variantOption.ParentVariant.Options.Remove(variantOption);
-        if (ids.Any(v => v.Key == variantOption.ParentVariant.ID))
+        if (variantIDs.Any(v => v.Key == variantOption.ParentVariant.ID))
         {
-		    ids.Find(v => v.Key == variantOption.ParentVariant.ID).Value.Remove(variantOption.ID);
+		    variantIDs.Find(v => v.Key == variantOption.ParentVariant.ID).Value.Remove(variantOption.ID);
         }
 	}
 
@@ -193,11 +184,11 @@ public class ProductDetailsViewModel : INotifyPropertyChanged
         {
             if ((bool)isChecked)
             {
-                ids.Add(new KeyValuePair<int, List<int>>(variant.ID, new List<int>()));
+                variantIDs.Add(new KeyValuePair<int, List<int>>(variant.ID, new List<int>()));
             }
             else
             {
-				ids.RemoveAll(v => v.Key == variant.ID);
+				variantIDs.RemoveAll(v => v.Key == variant.ID);
             }
         }
     }
@@ -208,22 +199,21 @@ public class ProductDetailsViewModel : INotifyPropertyChanged
         {
             if ((bool)isChecked)
             {
-                if (!ids.Any(v => v.Key == variantOption.ParentVariant.ID))
+                if (!variantIDs.Any(v => v.Key == variantOption.ParentVariant.ID))
                 {
                     AddVariantToProduct(variantOption);
 				}
-				ids.Find(v => v.Key == variantOption.ParentVariant.ID).Value.Add(variantOption.ID);
+				variantIDs.Find(v => v.Key == variantOption.ParentVariant.ID).Value.Add(variantOption.ID);
 			}
 			else
             {
-				ids.Find(v => v.Key == variantOption.ParentVariant.ID).Value.Remove(variantOption.ID);
+				variantIDs.Find(v => v.Key == variantOption.ParentVariant.ID).Value.Remove(variantOption.ID);
 			}
         }
     }
 
     public void AddVariantToProduct(VariantOption variantOption) {
         ToggleVariant(variantOption.ParentVariant, true);
-        Variants.ElementAt(Variants.IndexOf(variantOption.ParentVariant)).Selected = true;
     }
 
     public void CreateSaveProduct()
@@ -233,8 +223,7 @@ public class ProductDetailsViewModel : INotifyPropertyChanged
         product.Rating = double.Parse(Rating);
         product.Description = Description;
 
-        CopyVariants(ids, product.Variants);
-
+        CopyVariantsIDs(variantIDs, product.VariantsIDs);
         MainWindow.ProductListView.AddProduct(product);
 	}
 }

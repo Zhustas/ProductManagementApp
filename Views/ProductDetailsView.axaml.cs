@@ -1,14 +1,10 @@
-using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Interactivity;
-using Avalonia.Markup.Xaml;
-using Avalonia.VisualTree;
 using CommunityToolkit.Mvvm.Input;
 using CommunityToolkit.Mvvm.Messaging;
 using ProductManagementApp.Messages;
 using ProductManagementApp.Models;
 using ProductManagementApp.ViewModels;
-using System.Diagnostics;
 using System.Threading.Tasks;
 
 namespace ProductManagementApp;
@@ -17,24 +13,24 @@ public partial class ProductDetailsView : UserControl
 {
     private readonly ProductDetailsViewModel viewModel;
 
-    public ProductDetailsView(Product product, string buttonName)
+    public ProductDetailsView(Product product, string saveCreateButtonText, string headingText)
     {
         InitializeComponent();
 
         viewModel = new ProductDetailsViewModel(product);
         viewModel.SetProductVariants();
         DataContext = viewModel;
-        CreateSaveButton.Content = buttonName;
+		SetTextValues(saveCreateButtonText, headingText);
 	}
     
-    public ProductDetailsView(string buttonName)
+    public ProductDetailsView(string saveCreateButtonText, string headingText)
     {
         InitializeComponent();
 
         viewModel = new ProductDetailsViewModel();
         viewModel.SetProductVariants();
         DataContext = viewModel;
-        CreateSaveButton.Content = buttonName;
+        SetTextValues(saveCreateButtonText, headingText);
     }
 
     public ProductDetailsView()
@@ -43,6 +39,12 @@ public partial class ProductDetailsView : UserControl
 
 		viewModel = new ProductDetailsViewModel();
 		DataContext = viewModel;
+	}
+
+    private void SetTextValues(string saveCreateButtonText, string headingText)
+    {
+		CreateSaveButton.Content = saveCreateButtonText;
+		PageHeading.Text = headingText;
 	}
 
     public void OnCancelClick(object sender, RoutedEventArgs args)
@@ -80,14 +82,14 @@ public partial class ProductDetailsView : UserControl
 
     public void OnAddNewVariantClick(object sender, RoutedEventArgs args)
     {
-        viewModel.AddNewVariant();
+        ProductDetailsViewModel.AddNewVariant();
     }
 
     public void OnAddNewVariantOptionClick(object sender, RoutedEventArgs args)
     {
         if (sender is Button button && button.DataContext is Variant variant)
         {
-            viewModel.AddNewVariantOption(variant);
+            ProductDetailsViewModel.AddNewVariantOption(variant);
         }
     }
 

@@ -1,11 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
-using System.Diagnostics;
-using System.Globalization;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.ComponentModel.DataAnnotations;
 
 namespace ProductManagementApp.Attributes;
 
@@ -13,12 +6,11 @@ public class NumericAttribute : ValidationAttribute
 {
     public override bool IsValid(object? value)
     {
-        if (value is null) return false;
-        return double.TryParse(value.ToString(), out _);
-    }
+        if (value is null)
+        { 
+            return false;
+        }
 
-    public override string FormatErrorMessage(string name)
-    {
-        return string.Format(ErrorMessageString, name);
+        return double.TryParse(value.ToString(), out _);
     }
 }
